@@ -7,6 +7,10 @@ export const siteConfig = {
     {
       label: "Home",
       href: "/",
+    },
+    {
+      label: "卡片列表",
+      href: "/cards",
     }
   ],
   navMenuItems: [],
