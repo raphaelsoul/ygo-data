@@ -1,44 +1,25 @@
 import { NextResponse } from 'next/server'
 import { Card } from '@/entities/card.entity'
 import { getDataSource } from '@/app/lib/typeorm'
-
-type LuaScriptFileItem = {
-    name: string;
-    path: string;
-    sha: string;
-    size: number;
-    url: string;
-    html_url: string;
-    git_url: string;
-    download_url: string;
-}
+import { globby } from 'globby'
+import path from 'path'
 
 export async function POST(request: Request) {
-    try {
-        const dataSource = await getDataSource();
-        const cardRepository = dataSource.getRepository(Card);
-
-        const luaFileNames = [{ no: 'c1164211', status: 0 }];
-
-        if (luaFileNames.length > 0) {
-            await cardRepository
-                .createQueryBuilder()
-                .insert()
-                .into(Card)
-                .values(luaFileNames)
-                .orIgnore()
-                .execute();
-        }
-
-        return NextResponse.json({
-            message: '同步成功',
-            count: luaFileNames.length
-        });
-    } catch (error) {
-        console.error('同步卡片数据失败:', error);
-        return NextResponse.json(
-            { error: '同步卡片数据失败' },
-            { status: 500 }
-        );
+    const repoPath = process.env.YGO_SCRIPTS_REPO;
+    if (!repoPath) {
+        return NextResponse.json({ error: 'YGO_SCRIPTS_REPO环境变量未定义' }, { status: 500 });
     }
+    const files = await globby('**/*.lua', { cwd: repoPath });
+    const dataSource = await getDataSource();
+    const cardRepository = dataSource.getRepository(Card);
+
+    const chunks = Array.from({ length: Math.ceil(files.length / 100) }, (_, i) => files.slice(i * 100, (i + 1) * 100));
+    for (const chunk of chunks) {
+        await cardRepository.createQueryBuilder()
+            .insert()
+            .orIgnore()
+            .values(chunk.map(file => ({ no: path.basename(file, '.lua') })))
+            .execute();
+    }
+    return NextResponse.json({ success: true });
 }
