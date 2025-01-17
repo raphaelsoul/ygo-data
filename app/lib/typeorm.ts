@@ -3,12 +3,11 @@ import path from "path";
 import { Card } from "@/entities/card.entity";
 
 const AppDataSource = new DataSource({
-    type: "sqlite",
-    database: path.join(process.cwd(), "data/ygo.sqlite"),
+    type: process.env.DATABASE_TYPE as "sqlite" || "sqlite",
+    database: path.join(process.cwd(), process.env.DATABASE || "data/ygo.db"),
     synchronize: true,
     logging: process.env.NODE_ENV === "development",
     entities: [Card],
-    migrations: [path.join(process.cwd(), "migrations/**/*.migration.{ts,js}")],
 });
 
 let initialized = false;
