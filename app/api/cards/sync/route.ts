@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     if (!repoPath) {
         return NextResponse.json({ error: 'YGO_SCRIPTS_REPO环境变量未定义' }, { status: 500 });
     }
-    const files = await globby('**/*.lua', { cwd: repoPath });
+    const files = await globby(['**/c[0-9]*.lua'], { cwd: repoPath });
     const dataSource = await getDataSource();
     const cardRepository = dataSource.getRepository(Card);
 
