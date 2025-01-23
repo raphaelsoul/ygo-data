@@ -1,12 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class Card {
-    @PrimaryGeneratedColumn()
-    id!: number;
+    @PrimaryColumn({ type: "varchar", unique: true, nullable: false })
+    code: string | null = null;
 
-    @Column({ type: "varchar", unique: true })
-    no!: string;
+    @Column({ type: "varchar", nullable: true })
+    cid: string | null = null;
 
     @Column({ type: "tinyint", default: 0 })
     status!: number;
