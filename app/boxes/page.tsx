@@ -121,6 +121,7 @@ export default function BoxesPage() {
           selectedKeys={language}
           onSelectionChange={handleLanguageChange}
           className="w-32"
+          size="sm"
         >
           {LANGUAGES.map(lang => (
             <SelectItem key={lang.value} value={lang.value}>
