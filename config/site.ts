@@ -11,6 +11,10 @@ export const siteConfig = {
     {
       label: "卡片列表",
       href: "/cards",
+    },
+    {
+      label: "卡盒列表",
+      href: "/boxes",
     }
   ],
   navMenuItems: [],
