@@ -6,7 +6,6 @@ export class Box {
     
     @PrimaryGeneratedColumn('uuid')
     id!: string;
-
     
     @Column({ type: "varchar", unique: true, nullable: false })
     code: string | null = null;
@@ -17,12 +16,15 @@ export class Box {
     @Column({ type: "varchar", nullable: false })
     name!: string;
 
-    @Column({ type: "varchar", nullable: true })
-    description: string | null = null;
+    @Column({ type: "int", default: 0 })
+    count!: number;
 
     @Column({ type: "tinyint", default: 0 })
     status!: number;
-    
+
+    @Column({ type: "varchar", nullable: false })
+    url!: string;
+
     @Column({ type: "datetime", nullable: true })
     publishAt!: Date;
 
