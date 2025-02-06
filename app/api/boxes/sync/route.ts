@@ -42,23 +42,29 @@ async function fetchBoxData() {
     const $ = cheerio.load(text)
     const ocg = $('#ocg .packs .pack').toArray().map(pack => {
         const $pack = $(pack)
+        const link = $pack.find('a').eq(0).attr('href')
+        const publishAt = $pack.find('span').eq(0).text()
         return {
-            publishAt: new Date($pack.find('span').eq(0).text()),
+            publishAt: publishAt ? new Date(publishAt) : null,
+            boxId: link?.match(/\/pack\/(\d+)/)?.[1] || '',
             code: $pack.find('span').eq(1).text(),
             count: $pack.find('span').eq(2).text(),
             name: $pack.find('a').eq(0).text(),
-            url: $pack.find('a').eq(0).attr('href'),
+            url: link,
             language: 'JP',
         }
     })
     const tcg = $('#tcg .packs .pack').toArray().map(pack => {
         const $pack = $(pack)
+        const link = $pack.find('a').eq(0).attr('href')
+        const publishAt = $pack.find('span').eq(0).text()
         return {
-            publishedAt: $pack.find('span').eq(0).text(),
+            publishAt: publishAt ? new Date(publishAt) : null,
+            boxId: link?.match(/\/pack\/(\d+)/)?.[1] || '',
             code: $pack.find('span').eq(1).text(),
             count: $pack.find('span').eq(2).text(),
             name: $pack.find('a').eq(0).text(),
-            url: $pack.find('a').eq(0).attr('href'),
+            url: link,
             language: 'EN',
         }
     })

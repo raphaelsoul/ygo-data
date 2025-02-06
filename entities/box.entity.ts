@@ -1,13 +1,15 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Index } from "typeorm";
 
-@Index(['code', 'language'], { unique: true })
 @Entity()
 export class Box {
     
     @PrimaryGeneratedColumn('uuid')
     id!: string;
+
+    @Column({ type: "varchar", nullable: false, unique: true })
+    boxId!: string;
     
-    @Column({ type: "varchar", unique: true, nullable: false })
+    @Column({ type: "varchar", nullable: false })
     code: string | null = null;
     
     @Column({ type: "varchar", nullable: false })
