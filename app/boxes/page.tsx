@@ -48,16 +48,32 @@ function ReloadButton(props: { isLoading: boolean; reload: () => void }) {
   </Button>
 }
 
-function SelectedBoxSyncButton(props: { selectedKeys: Set<string> | 'all'; }) {
+function SelectedBoxSyncButton(props: { selectedBoxIds: string[]; reload: () => void; }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const canPress = useMemo(() => props.selectedKeys === 'all' || props.selectedKeys.size > 0, [props.selectedKeys]);
+  const canPress = useMemo(() => props.selectedBoxIds.length > 0, [props.selectedBoxIds]);
 
-  function handleSync() {
-    setIsLoading(true);
-    // TODO: 实现同步逻辑
-    console.log(props.selectedKeys);
-    setIsLoading(false);
+  async function handleSync() {
+    console.log(props.selectedBoxIds);
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/boxes/fetch', {
+        method: 'POST',
+        body: JSON.stringify({ boxIds: props.selectedBoxIds }),
+      });
+      if (!response.ok) {
+        throw new Error('同步失败');
+      }
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error('同步失败');
+      }
+      props.reload();
+    } catch (error) {
+      console.error('同步失败:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }
   return (
     <Button
@@ -140,7 +156,7 @@ export default function BoxesPage() {
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState(new Set<string>());
   const [status, setStatus] = useState(new Set<string>());
-  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set([]));
+  const [selectedKeys, setSelectedKeys] = useState<Set<string> | 'all'>(new Set([]));
   const [pagination, setPagination] = useState<PaginationState>({
     page: 1,
     pageSize: 20,
@@ -189,7 +205,13 @@ export default function BoxesPage() {
     setStatus(keys as Set<string>);
     setPagination(prev => ({ ...prev, page: 1 }));
   };
-  
+
+  const selectedBoxIds = useMemo(() => {
+    if (selectedKeys === 'all') {
+      return boxes.map(box => box.id);
+    }
+    return Array.from(selectedKeys);
+  }, [selectedKeys, boxes])
 
   if (loading) {
     return (
@@ -203,7 +225,10 @@ export default function BoxesPage() {
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">卡盒列表</h1>
       <div className="flex justify-between items-center gap-2">
-        <SelectedBoxSyncButton selectedKeys={selectedKeys} />
+        <SelectedBoxSyncButton 
+          selectedBoxIds={selectedBoxIds}
+          reload={() => fetchBoxes(pagination.page)}
+        />
         <div className="flex justify-end items-center gap-2">
           <Select
             label="语言"
@@ -255,13 +280,12 @@ export default function BoxesPage() {
           <TableColumn>名称</TableColumn>
           <TableColumn>语言</TableColumn>
           <TableColumn>状态</TableColumn>
-          
           <TableColumn>创建时间</TableColumn>
           <TableColumn>更新时间</TableColumn>
         </TableHeader>
         <TableBody>
           {boxes.map((box) => (
-            <TableRow key={box.id}>
+            <TableRow key={box.boxId}>
               <TableCell>{box.publishAt ? new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(box.publishAt)) : '-'}</TableCell>
               <TableCell>{box.code}</TableCell>
               <TableCell>{box.count}</TableCell>

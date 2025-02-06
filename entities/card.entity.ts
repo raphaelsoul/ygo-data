@@ -1,10 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryColumn } from "typeorm";
+import { Entity, Index, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryColumn } from "typeorm";
 
 @Entity()
+@Index(["code", "cid"], { unique: true })
 export class Card {
     
     @PrimaryGeneratedColumn('uuid')
-    id!: number;
+    id!: string;
 
     @PrimaryColumn({ type: "varchar", unique: true, nullable: false })
     code: string | null = null;
@@ -15,7 +16,7 @@ export class Card {
     @Column("json", {nullable: true})
     name: {
         zh: string;
-        ja: string;
+        jp: string;
         en: string;
     } | null = null;
     
