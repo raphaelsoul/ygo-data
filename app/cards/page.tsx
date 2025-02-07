@@ -149,6 +149,14 @@ export default function CardsPage() {
     setPagination(prev => ({ ...prev, page }));
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-200px)]">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">卡片列表</h1>
@@ -186,10 +194,7 @@ export default function CardsPage() {
           <TableColumn>创建时间</TableColumn>
           <TableColumn>更新时间</TableColumn>
         </TableHeader>
-        <TableBody 
-          loadingContent={<Spinner />}
-          isLoading={loading}
-        >
+        <TableBody>
           {cards.map((card) => (
             <TableRow key={card.id}>
               <TableCell>{card.code}</TableCell>

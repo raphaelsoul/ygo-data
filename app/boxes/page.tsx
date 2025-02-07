@@ -214,6 +214,14 @@ export default function BoxesPage() {
     return Array.from(selectedKeys);
   }, [selectedKeys, boxes])
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-200px)]">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">卡盒列表</h1>
@@ -276,10 +284,7 @@ export default function BoxesPage() {
           <TableColumn>创建时间</TableColumn>
           <TableColumn>更新时间</TableColumn>
         </TableHeader>
-        <TableBody 
-          loadingContent={<Spinner />}
-          isLoading={loading}
-        >
+        <TableBody>
           {boxes.map((box) => (
             <TableRow key={box.boxId}>
               <TableCell>{box.publishAt ? new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(box.publishAt)) : '-'}</TableCell>
