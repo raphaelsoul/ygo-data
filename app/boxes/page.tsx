@@ -16,6 +16,7 @@ import { Input } from '@heroui/input';
 import { Select, SelectItem } from '@heroui/select';
 import { Button } from '@heroui/button';
 import { Chip } from '@heroui/chip';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
 function AllBoxesSyncButton(props: { reload: (page: number) => void }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -43,8 +44,8 @@ function AllBoxesSyncButton(props: { reload: (page: number) => void }) {
 }
 
 function ReloadButton(props: { isLoading: boolean; reload: () => void }) {
-  return <Button size='sm' color="primary" isLoading={props.isLoading} onPress={() => props.reload()}>
-    {props.isLoading ? '加载中...' : '刷新列表'}
+  return <Button size='sm' color="primary" isLoading={props.isLoading} onPress={() => props.reload()} isIconOnly>
+    <ArrowPathIcon className="w-5 h-5" />
   </Button>
 }
 
@@ -213,14 +214,6 @@ export default function BoxesPage() {
     return Array.from(selectedKeys);
   }, [selectedKeys, boxes])
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-[calc(100vh-200px)]">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">卡盒列表</h1>
@@ -283,7 +276,10 @@ export default function BoxesPage() {
           <TableColumn>创建时间</TableColumn>
           <TableColumn>更新时间</TableColumn>
         </TableHeader>
-        <TableBody>
+        <TableBody 
+          loadingContent={<Spinner />}
+          isLoading={loading}
+        >
           {boxes.map((box) => (
             <TableRow key={box.boxId}>
               <TableCell>{box.publishAt ? new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(box.publishAt)) : '-'}</TableCell>

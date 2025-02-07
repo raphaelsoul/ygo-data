@@ -16,6 +16,7 @@ import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
 import { Chip } from '@heroui/chip';
 import { SharedSelection } from '@heroui/react';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
 interface PaginationState {
   page: number;
@@ -31,8 +32,9 @@ function ReloadButton(props: { isLoading: boolean; reload: () => void }) {
       color="primary"
       isLoading={props.isLoading}
       onPress={() => props.reload()}
+      isIconOnly
     >
-      {props.isLoading ? '加载中...' : '刷新列表'}
+      <ArrowPathIcon className="w-5 h-5" />
     </Button>
   );
 }
@@ -147,14 +149,6 @@ export default function CardsPage() {
     setPagination(prev => ({ ...prev, page }));
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-[calc(100vh-200px)]">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">卡片列表</h1>
@@ -192,7 +186,10 @@ export default function CardsPage() {
           <TableColumn>创建时间</TableColumn>
           <TableColumn>更新时间</TableColumn>
         </TableHeader>
-        <TableBody>
+        <TableBody 
+          loadingContent={<Spinner />}
+          isLoading={loading}
+        >
           {cards.map((card) => (
             <TableRow key={card.id}>
               <TableCell>{card.code}</TableCell>
