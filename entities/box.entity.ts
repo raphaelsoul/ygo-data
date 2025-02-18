@@ -21,13 +21,13 @@ export class Box {
     @Column({ type: "int", default: 0 })
     count!: number;
 
-    @Column({ type: "tinyint", default: 0 })
+    @Column({ type: "boolean", default: 0 })
     status!: number;
 
     @Column({ type: "varchar", nullable: false })
     url!: string;
 
-    @Column({ type: "datetime", nullable: true })
+    @Column({ nullable: true })
     publishAt!: Date;
 
     @CreateDateColumn()

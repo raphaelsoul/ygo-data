@@ -208,9 +208,9 @@ export default function CardsPage() {
               </TableCell>
               <TableCell>
                 {
-                  card.status === 0 
-                    ? <Chip color="danger" size="sm" variant="solid">未同步</Chip>
-                    : <Chip color="success" size="sm" variant="solid">已同步</Chip>
+                  card.status
+                    ? <Chip color="success" size="sm" variant="solid">已同步</Chip>
+                    : <Chip color="danger" size="sm" variant="solid">未同步</Chip>
                 }
               </TableCell>
               <TableCell>{new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(card.createdAt))}</TableCell>

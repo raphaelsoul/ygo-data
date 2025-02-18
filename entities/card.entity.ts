@@ -20,7 +20,7 @@ export class Card {
         en: string;
     } | null = null;
     
-    @Column({ type: "tinyint", default: 0 })
+    @Column({ type: "boolean", default: 0 })
     status!: number;
 
     @CreateDateColumn()

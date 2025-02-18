@@ -4,11 +4,14 @@ import { Card } from "@/entities/card.entity";
 import { Box } from "@/entities/box.entity";
 
 const AppDataSource = new DataSource({
-    type: process.env.DATABASE_TYPE as "sqlite" || "sqlite",
-    database: path.join(process.cwd(), process.env.DATABASE || "data/ygo.db"),
+    type: process.env.DATABASE_TYPE as any,
+    schema: process.env.DATABASE_SCHEMA,
+    username: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
     synchronize: true,
     logging: process.env.NODE_ENV === "development",
     entities: [Card, Box],
+    url: process.env.DATABASE_URL,
 });
 
 let initialized = false;

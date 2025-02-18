@@ -47,8 +47,8 @@ async function fetchBoxContent(boxId: string) {
         const $names = $card.find('.names')
         const cid = $names.find('.cid').text()
         const code = href?.match(/\/card\/(\d+)/)?.[1] || ''
-        const zh = $names.find('span[lang="zh-Hans"]').text()
-        const en = $names.find('span[lang="en"]').text()
+        const zh = $names.find('span[lang="zh-Hans"]').eq(0).text()
+        const en = $names.find('span[lang="zh-Hans"]').eq(1).text()
         const jp = $names.find('span[lang="ja-Jpan"]').text()
         return {
             code: code,
