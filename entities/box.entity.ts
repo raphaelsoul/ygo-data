@@ -21,8 +21,8 @@ export class Box {
     @Column({ type: "int", default: 0 })
     count!: number;
 
-    @Column({ type: "boolean", default: 0 })
-    status!: number;
+    @Column({ type: "boolean", default: false })
+    status!: boolean;
 
     @Column({ type: "varchar", nullable: false })
     url!: string;

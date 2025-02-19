@@ -20,8 +20,8 @@ export class Card {
         en: string;
     } | null = null;
     
-    @Column({ type: "boolean", default: 0 })
-    status!: number;
+    @Column({ type: "boolean", default: false })
+    status!: boolean;
 
     @CreateDateColumn()
     createdAt!: Date;

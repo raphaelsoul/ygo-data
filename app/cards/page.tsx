@@ -50,6 +50,25 @@ function SelectedCardSyncButton(props: {
   async function handleSync() {
     // 暂时保持为空函数
     console.log(props.selectedCardIds);
+    try {
+      setIsLoading(true)
+      const response = await fetch('/api/cards/fetch', {
+        method: 'POST',
+        body: JSON.stringify({ cardIds: props.selectedCardIds.map(card => card.code) }),
+      })
+      if (!response.ok) {
+        throw new Error('同步失败')
+      }
+      const data = await response.json()
+      if (!data.success) {
+        throw new Error('同步失败')
+      }
+      props.reload()
+    } catch (error) {
+      console.error('同步失败:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
